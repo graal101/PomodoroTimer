@@ -1,6 +1,7 @@
 #! /usr/bin/env python3
 import sys
 import time
+from libs.sound import Sound
 from PyQt6.QtCore import QTimer
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox
@@ -34,6 +35,8 @@ class MainWindow(QMainWindow):
         
 
     def on_btn_start_click(self):
+        snd = Sound(1300, 2500)
+        snd.play_sound()
         self.start_countdown(10)
         
     
