@@ -99,8 +99,30 @@
      <height>23</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menu">
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="title">
+     <string>Управление</string>
+    </property>
+    <addaction name="mn_font"/>
+    <addaction name="separator"/>
+    <addaction name="mn_quit"/>
+   </widget>
+   <addaction name="menu"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="mn_quit">
+   <property name="text">
+    <string>Выход</string>
+   </property>
+  </action>
+  <action name="mn_font">
+   <property name="text">
+    <string>Выбор шрифта</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

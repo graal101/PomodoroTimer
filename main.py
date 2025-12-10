@@ -2,6 +2,7 @@
 import sys
 import time
 from libs.sound import Sound
+from Dialogs.dialogs import FileDialog
 from PyQt6.QtCore import QTimer
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox
@@ -15,6 +16,8 @@ class MainWindow(QMainWindow):
         # Загружаем пользовательский интерфейс из файла .ui
         uic.loadUi("ui/main_window.ui", self)
         self.btn_start.clicked.connect(self.on_btn_start_click)
+        self.mn_quit.triggered.connect(self.app_quit)
+        self.mn_font.triggered.connect(self.app_font)
         
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_timer)
@@ -39,7 +42,16 @@ class MainWindow(QMainWindow):
         snd.play_sound()
         self.start_countdown(10)
         
-    
+    def app_font(self):
+        font_open = FileDialog()
+        fsize = font_open.font_dialog()
+        if fsize:
+            print(fsize)
+            self.label_info.setFont(fsize)
+            self.label_time.setFont(fsize)
+            
+    def app_quit(self):
+        quit()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
