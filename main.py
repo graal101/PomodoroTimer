@@ -38,7 +38,7 @@ class MainWindow(QMainWindow):
         
 
     def on_btn_start_click(self):
-        snd = Sound(1300, 2500)
+        snd = Sound(1200, 2500)
         snd.play_sound()
         self.start_countdown(10)
         
