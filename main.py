@@ -7,9 +7,7 @@ from PyQt6.QtCore import QTimer
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox
 
-
-
-
+# FIX documentation! Linter it!
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -40,7 +38,10 @@ class MainWindow(QMainWindow):
     def on_btn_start_click(self):
         snd = Sound(1200, 2500)
         snd.play_sound()
-        self.start_countdown(10)
+        w = self.spin_work.value() * 60  # Время задания
+        r = self.spin_rest.value() * 60  # Время перерыва
+        self.work_rest_fun(w, r)
+        self.start_countdown(w)
         
     def app_font(self):
         font_open = FileDialog()
@@ -49,7 +50,10 @@ class MainWindow(QMainWindow):
             print(fsize)
             self.label_info.setFont(fsize)
             self.label_time.setFont(fsize)
-            
+
+    def work_rest_fun(self, w: int, r:int):
+        pass
+        
     def app_quit(self):
         quit()
 
