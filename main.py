@@ -23,6 +23,8 @@ class MainWindow(QMainWindow):
         
     def start_countdown(self, t: int):
         self.remaining_time = t
+        self.Bar_work.setMaximum(t)
+        self.Bar_work.setValue(0)
         self.timer.start(1000)  # запускает таймер с интервалом 1 секунда
         
     def update_timer(self):
@@ -30,6 +32,7 @@ class MainWindow(QMainWindow):
             mins, secs = divmod(self.remaining_time, 60)
             timer_display = '{:02d}:{:02d}'.format(mins, secs)
             self.label_time.setText(timer_display)
+            self.Bar_work.setValue(self.Bar_work.maximum() - self.remaining_time)
             self.remaining_time -= 1
         else:
             self.timer.stop()  # останавливает таймер, когда время истекает
