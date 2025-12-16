@@ -54,7 +54,7 @@ class MainWindow(QMainWindow):
             self.label_info.setFont(fsize)
             self.label_time.setFont(fsize)
 
-    def work_rest_fun(self, w: int, r:int):
+    def work_rest_fun(self, work: int, rest:int, number_bar: int = 0 ):
         pass
         
     def app_quit(self):
