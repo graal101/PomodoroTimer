@@ -8,12 +8,27 @@ from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QMainWindow, QMessageBox
 
 # FIX documentation! Linter it!
+class PauseState():
+    '''Класс для фиксации времен при паузе.'''
+    def __init__(self):
+        self.t_work = 0
+        self.t_rest = 0
+        self.edit = True  # Флаг для переключения между режимами, True = work
+        
+    def start_state(self):
+        self.t_work = 0
+        self.t_rest = 0
+        self.edit = True
+        
+        
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
         # Загружаем пользовательский интерфейс из файла .ui
         uic.loadUi("ui/main_window.ui", self)
         self.btn_start.clicked.connect(self.on_btn_start_click)
+        self.btn_stop.clicked.connect(self.on_btn_stop)
+        self.btn_pause.clicked.connect(self.on_btn_pause)
         self.mn_quit.triggered.connect(self.app_quit)
         self.mn_font.triggered.connect(self.app_font)
         
@@ -22,7 +37,12 @@ class MainWindow(QMainWindow):
         self.remaining_time = 0
         
     def start_countdown(self, t: int):
-        self.remaining_time = t
+        print(p.t_work)
+        if p.t_work == 0:
+            self.remaining_time = t
+        else:
+            self.remaining_time = p.t_work
+            print('Продолжаем отсчёт - ', self.remaining_time)
         self.Bar_work.setMaximum(t)
         self.Bar_work.setValue(0)
         self.timer.start(1000)  # запускает таймер с интервалом 1 секунда
@@ -34,8 +54,18 @@ class MainWindow(QMainWindow):
             self.label_time.setText(timer_display)
             self.Bar_work.setValue(self.Bar_work.maximum() - self.remaining_time)
             self.remaining_time -= 1
+            p.t_work = self.remaining_time
+            print(p.t_work)
+
         else:
             self.timer.stop()  # останавливает таймер, когда время истекает
+            p.start_state()
+            snd = Sound(1200, 1000)
+            snd.play_sound()
+            snd = Sound(1200, 1000)
+            snd.play_sound()
+            snd = Sound(1200, 1000)
+            snd.play_sound()
         
 
     def on_btn_start_click(self):
@@ -43,8 +73,16 @@ class MainWindow(QMainWindow):
         snd.play_sound()
         w = self.spin_work.value() * 60  # Время задания
         r = self.spin_rest.value() * 60  # Время перерыва
-        self.work_rest_fun(w, r)
-        self.start_countdown(w)
+        self.start_countdown(w if p.edit else r)
+        
+    def on_btn_stop(self):
+        print('stop')
+        self.timer.stop()
+        p.start_state()
+        
+    def on_btn_pause(self):
+        print('paused')
+        self.timer.stop()
         
     def app_font(self):
         font_open = FileDialog()
@@ -54,13 +92,12 @@ class MainWindow(QMainWindow):
             self.label_info.setFont(fsize)
             self.label_time.setFont(fsize)
 
-    def work_rest_fun(self, work: int, rest:int, number_bar: int = 0 ):
-        pass
         
     def app_quit(self):
         quit()
 
 if __name__ == "__main__":
+    p = PauseState()
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
