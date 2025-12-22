@@ -71,15 +71,21 @@ class MainWindow(QMainWindow):
         w = self.spin_work.value() * 60  # Время задания
         r = self.spin_rest.value() * 60  # Время перерыва
         self.start_countdown(w if p.edit else r)
+        self.btn_start.setEnabled(False)
 
     def on_btn_stop(self):
         print('stop')
         self.timer.stop()
         p.start_state()
+        self.Bar_work.setValue(0)
+        self.label_time.setText('Null')
+        self.btn_start.setEnabled(True)
+        
 
     def on_btn_pause(self):
         print('paused')
         self.timer.stop()
+        self.btn_start.setEnabled(True)
 
     def app_font(self):
         font_open = FileDialog()
@@ -91,12 +97,9 @@ class MainWindow(QMainWindow):
 
     def sound_mod(self, mode):
         if mode == 'stop':
-            snd = Sound(1200, 1000)
-            snd.play_sound()
-            snd = Sound(1200, 1000)
-            snd.play_sound()
-            snd = Sound(1200, 1000)
-            snd.play_sound()
+            for _ in range(3):
+                snd = Sound(1200, 1000)
+                snd.play_sound()
         if mode == 'start':
             snd = Sound(1200, 2500)
             snd.play_sound()
