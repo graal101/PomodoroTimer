@@ -137,6 +137,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="btn_pause">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="cursor">
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
@@ -147,6 +150,9 @@
           </item>
           <item>
            <widget class="QPushButton" name="btn_stop">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
             <property name="cursor">
              <cursorShape>PointingHandCursor</cursorShape>
             </property>
