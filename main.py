@@ -40,6 +40,7 @@ class MainWindow(QMainWindow):
         self.mn_font.triggered.connect(self.app_font)
         self.tray_icon = QSystemTrayIcon(self)
         self.tray_icon.setIcon(QIcon("ico/rotten-tomatoes-logo.png"))
+        self.tray_icon.activated.connect(self.on_tray_icon_click)
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_timer)
         self.remaining_time = 0
@@ -95,6 +96,17 @@ class MainWindow(QMainWindow):
         self.timer.stop()
         self.btn_start.setEnabled(True)
 
+
+    def on_tray_icon_click(self, reason):
+        """Появление/скрытие окна при кликание по трею."""
+        print('Hello, double click!')
+        if reason == QSystemTrayIcon.ActivationReason.Trigger:
+            if self.isHidden():
+                self.show()
+                self.activateWindow()
+            else:
+                self.hide()
+           
 #========================================================================
 
     def app_font(self):
