@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>839</width>
-    <height>358</height>
+    <height>264</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -33,35 +33,6 @@ border: 0.5px solid #B8860B;*/</string>
        <enum>QFrame::Plain</enum>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <item>
-        <widget class="QProgressBar" name="progressBar">
-         <property name="cursor">
-          <cursorShape>IBeamCursor</cursorShape>
-         </property>
-         <property name="value">
-          <number>0</number>
-         </property>
-        </widget>
-       </item>
-       <item>
-        <widget class="QLabel" name="label_info">
-         <property name="font">
-          <font>
-           <family>Noto Sans</family>
-           <pointsize>24</pointsize>
-          </font>
-         </property>
-         <property name="frameShape">
-          <enum>QFrame::StyledPanel</enum>
-         </property>
-         <property name="text">
-          <string>Null</string>
-         </property>
-         <property name="scaledContents">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
        <item>
         <widget class="QFrame" name="frame_4">
          <property name="frameShape">
