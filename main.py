@@ -41,6 +41,12 @@ class MainWindow(QMainWindow):
         self.tray_icon = QSystemTrayIcon(self)
         self.tray_icon.setIcon(QIcon("ico/rotten-tomatoes-logo.png"))
         self.tray_icon.activated.connect(self.on_tray_icon_click)
+        
+        self.is_working = True  # Флаг, указывающий, идет ли сейчас работа или отдых
+        self.work_duration = 0
+        self.rest_duration = 0
+        self.remaining_time = 0  # Добавлено для отслеживания оставшегося времени
+        
         self.timer = QTimer()
         self.timer.timeout.connect(self.update_timer)
         self.remaining_time = 0
@@ -49,15 +55,15 @@ class MainWindow(QMainWindow):
 
     def start_countdown(self, t: int):
         """Функция запуска таймера."""
-        
-        print(p.t_work)
-        if p.t_work == 0:
-            self.remaining_time = t
-        else:
-            self.remaining_time = p.t_work
-            print('Продолжаем отсчёт - ', self.remaining_time)
+        self.remaining_time = t
         self.Bar_work.setMaximum(t)
         self.Bar_work.setValue(0)
+
+        if self.is_working:
+            self.label_time.setText('Работа!')
+        else:
+            self.label_time.setText('Отдых!')
+        
         self.timer.start(TIMER_INTERVAL)  # запускает таймер с интервалом 1 секунда
 
     def update_timer(self):
@@ -68,27 +74,32 @@ class MainWindow(QMainWindow):
             self.label_time.setText(timer_display)
             self.Bar_work.setValue(self.Bar_work.maximum() - self.remaining_time)
             self.remaining_time -= 1
-            p.t_work = self.remaining_time
-            print(p.t_work)
         else:
-            self.timer.stop()  #!!! останавливает таймер, когда время истекает
-            p.start_state()
+            self.timer.stop()
             self.sound_mod('stop')
+            if self.is_working:
+                self.is_working = False  # Переключаемся на отдых
+                self.start_countdown(self.rest_duration)  # Запускаем отдых
+            else:
+                self.is_working = True  # Переключаемся на работу
+                self.start_countdown(self.work_duration)  # Запускаем работу
 
     def on_btn_start_click(self):
+        """Обработчик нажатия кнопки 'Старт'."""
         self.sound_mod('start')
-        w = self.spin_work.value() * 60  # Время задания
-        r = self.spin_rest.value() * 60  # Время перерыва
-        self.start_countdown(w if p.edit else r)
+        self.work_duration = self.spin_work.value() * 60  # Время работы в секундах
+        self.rest_duration = self.spin_rest.value() * 60  # Время отдыха в секундах
+        self.start_countdown(self.work_duration)  # Начинаем с работы
         self.btn_start.setEnabled(False)
-
+        
     def on_btn_stop(self):
-        print('stop')
+        """Обработчик нажатия кнопки 'Стоп'."""
         self.timer.stop()
-        p.start_state()
+        p.start_state()  # Сброс состояния
         self.Bar_work.setValue(0)
         self.label_time.setText('Null')
         self.btn_start.setEnabled(True)
+        self.is_working = True  # Сброс состояния
         
 
     def on_btn_pause(self):
