@@ -13,19 +13,16 @@ SOUND_STOP_FREQUENCY = 1200  # Частота звука при остановк
 SOUND_START_DURATION = 2500  # Продолжительность звука при старте в миллисекундах.
 SOUND_STOP_DURATION = 1000  # Продолжительность звука при остановке  в миллисекундах.
 
-# FIX documentation! Linter it!
+
 class PauseState():
     """Класс для фиксации времен при паузе."""
-
     def __init__(self):
         self.t_work = 0  # Время осчёта для работы
         self.t_rest = 0  # Время отсчёта для отдыха
-        self.edit = True  # Флаг для переключения между режимами, True = work
 
     def start_state(self): # Устанавливает начально/стартовые условия
         self.t_work = 0
         self.t_rest = 0
-        self.edit = True
       
 
 class MainWindow(QMainWindow):
@@ -67,7 +64,7 @@ class MainWindow(QMainWindow):
         self.timer.start(TIMER_INTERVAL)  # запускает таймер с интервалом 1 секунда
 
     def update_timer(self):
-        """Функция работы таймера."""
+        """Обновление таймера."""
         if self.remaining_time > 0:
             mins, secs = divmod(self.remaining_time, 60)
             timer_display = '{:02d}:{:02d}'.format(mins, secs)
@@ -76,21 +73,28 @@ class MainWindow(QMainWindow):
             self.remaining_time -= 1
         else:
             self.timer.stop()
-            self.sound_mod('stop')
+            self.sound_mod('stop')  # Проигрываем звук при переключении режимов
             if self.is_working:
                 self.is_working = False  # Переключаемся на отдых
                 self.start_countdown(self.rest_duration)  # Запускаем отдых
+                self.sound_mod('start')  # Проигрываем сигнал начала отдыха
             else:
                 self.is_working = True  # Переключаемся на работу
                 self.start_countdown(self.work_duration)  # Запускаем работу
+                self.sound_mod('start')  # Проигрываем сигнал начала работы
 
     def on_btn_start_click(self):
-        """Обработчик нажатия кнопки 'Старт'."""
+        """Обработка нажатия кнопки 'Старт'."""
         self.sound_mod('start')
-        self.work_duration = self.spin_work.value() * 60  # Время работы в секундах
-        self.rest_duration = self.spin_rest.value() * 60  # Время отдыха в секундах
-        self.start_countdown(self.work_duration)  # Начинаем с работы
-        self.btn_start.setEnabled(False)
+
+        # Считываем время работы и отдыха только в первый раз.
+        if self.work_duration == 0 and self.rest_duration == 0:
+            self.work_duration = self.spin_work.value() * 60
+            self.rest_duration = self.spin_rest.value() * 60
+
+        if not self.timer.isActive():
+            self.start_countdown(self.remaining_time if self.remaining_time > 0 else self.work_duration)
+            self.btn_start.setEnabled(False)
         
     def on_btn_stop(self):
         """Обработчик нажатия кнопки 'Стоп'."""
@@ -103,9 +107,11 @@ class MainWindow(QMainWindow):
         
 
     def on_btn_pause(self):
-        print('paused')
-        self.timer.stop()
-        self.btn_start.setEnabled(True)
+        """Обработчик нажатия кнопки 'Пауза'."""
+        if self.timer.isActive():
+            self.timer.stop()  # Останавливаем таймер, если он запущен
+            self.btn_start.setEnabled(True)  # Включаем кнопку 'Старт'
+            self.label_time.setText('Пауза')  # Указываем, что таймер на паузе
 
 
     def on_tray_icon_click(self, reason):
@@ -121,11 +127,11 @@ class MainWindow(QMainWindow):
 #========================================================================
 
     def app_font(self):
+        """Выбор шрифтов в приложении."""
         font_open = FileDialog()
         fsize = font_open.font_dialog()
         if fsize:
             print(fsize)
-            self.label_info.setFont(fsize)
             self.label_time.setFont(fsize)
 
     def sound_mod(self, mode):
