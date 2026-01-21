@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
         if self.remaining_time > 0:
             mins, secs = divmod(self.remaining_time, 60)
             timer_display = '{:02d}:{:02d}'.format(mins, secs)
-            self.label_time.setText(timer_display)
+            self.label_time.setText("Работа - " + timer_display if self.is_working else "Отдых - " + timer_display)
             self.Bar_work.setValue(self.Bar_work.maximum() - self.remaining_time)
             self.remaining_time -= 1
         else:
@@ -104,6 +104,7 @@ class MainWindow(QMainWindow):
         self.label_time.setText('Null')
         self.btn_start.setEnabled(True)
         self.is_working = True  # Сброс состояния
+        self.remaining_time = 0 # Сброс состояния
         
 
     def on_btn_pause(self):
@@ -116,7 +117,6 @@ class MainWindow(QMainWindow):
 
     def on_tray_icon_click(self, reason):
         """Появление/скрытие окна при кликание по трею."""
-        print('Hello, double click!')
         if reason == QSystemTrayIcon.ActivationReason.Trigger:
             if self.isHidden():
                 self.show()
