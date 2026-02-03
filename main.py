@@ -68,7 +68,7 @@ class MainWindow(QMainWindow):
         if self.remaining_time > 0:
             mins, secs = divmod(self.remaining_time, 60)
             timer_display = '{:02d}:{:02d}'.format(mins, secs)
-            self.label_time.setText("Работа - " + timer_display if self.is_working else "Отдых - " + timer_display)
+            self.label_time.setText(f'Работа - {timer_display}' if self.is_working else f'Отдых - {timer_display}')
             self.Bar_work.setValue(self.Bar_work.maximum() - self.remaining_time)
             self.remaining_time -= 1
         else:
@@ -91,6 +91,8 @@ class MainWindow(QMainWindow):
         if self.work_duration == 0 and self.rest_duration == 0:
             self.work_duration = self.spin_work.value() * 60
             self.rest_duration = self.spin_rest.value() * 60
+            self.spin_work.setEnabled(False)
+            self.spin_rest.setEnabled(False)
 
         if not self.timer.isActive():
             self.start_countdown(self.remaining_time if self.remaining_time > 0 else self.work_duration)
