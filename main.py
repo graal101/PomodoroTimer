@@ -20,6 +20,7 @@ class PauseState():
         self.t_work = 0  # Время осчёта для работы
         self.t_rest = 0  # Время отсчёта для отдыха
 
+
     def start_state(self): # Устанавливает начально/стартовые условия
         self.t_work = 0
         self.t_rest = 0
@@ -108,7 +109,6 @@ class MainWindow(QMainWindow):
         self.is_working = True  # Сброс состояния
         self.remaining_time = 0 # Сброс состояния
         
-
     def on_btn_pause(self):
         """Обработчик нажатия кнопки 'Пауза'."""
         if self.timer.isActive():
@@ -126,7 +126,7 @@ class MainWindow(QMainWindow):
             else:
                 self.hide()
            
-#========================================================================
+# ========================================================================
 
     def app_font(self):
         """Выбор шрифтов в приложении."""
