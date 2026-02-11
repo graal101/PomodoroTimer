@@ -104,7 +104,7 @@ class MainWindow(QMainWindow):
         self.timer.stop()
         p.start_state()  # Сброс состояния
         self.Bar_work.setValue(0)
-        self.label_time.setText('Null')
+        self.label_time.setText('--:--')
         self.btn_start.setEnabled(True)
         self.is_working = True  # Сброс состояния
         self.remaining_time = 0 # Сброс состояния
